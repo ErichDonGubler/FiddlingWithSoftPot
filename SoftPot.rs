@@ -49,17 +49,20 @@ fn main() {
         loop {
             let mut slice = [0;2];
             let resultythingy = port.read_exact(&mut slice[..]);
-            if resultythingy.is_ok() {
-                // println!("                                      Everything is ok!");
-                // The arduino sends ascii, and 0 in ascii is 48.
-                let read_note = (i32::from(slice[0]%48)* 10) + i32::from(slice[1]%48);
-                let mut note = get_note.lock().unwrap();
-                if read_note != *note {
-                    *note = read_note
+            match resultythingy {
+                Ok(()) => {
+                    // println!("                                      Everything is ok!");
+                    // The arduino sends ascii, and 0 in ascii is 48.
+                    let read_note = (i32::from(slice[0]%48)* 10) + i32::from(slice[1]%48);
+                    let mut note = get_note.lock().unwrap();
+                    if read_note != *note {
+                        *note = read_note
+                    }
+                    // println!("                                          Note! {:?}", *note)
+                },
+                Err(resultythingy) => {
+                    // println!("                                      Oh no! {:?}", resultythingy);
                 }
-                // println!("                                          Note! {:?}", *note)
-            } else if resultythingy.is_err() {
-                // println!("                                      Oh no! {:?}", resultythingy);
             }
         }
     });
