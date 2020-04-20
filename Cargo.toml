@@ -1,0 +1,15 @@
+[package]
+name = "SoftPot"
+version = "0.1.0"
+authors = ["JacobPuff <jacob@todandlorna.com>"]
+edition = "2020"
+
+[dependencies]
+serial = "0.4.0"
+cpal = "0.11.0"
+sample = "0.10.0"
+rand = "0.7.3"
+
+[[bin]]
+name = "SoftPot"
+path = "SoftPot.rs"
