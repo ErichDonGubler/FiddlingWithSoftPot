@@ -1,4 +1,5 @@
 use serial::prelude::*;
+use serial::ErrorKind::NoDevice;
 use sample::{signal, Signal};
 
 use std::io::Read;
@@ -11,7 +12,15 @@ use cpal::traits::{DeviceTrait, EventLoopTrait, HostTrait};
 
 fn main() {
     // Set up port to get data from arduino
-    let mut port = serial::open("COM4").unwrap();
+    let mut port = match serial::open("COM4") {
+        Ok(result) => result,
+        Err(error) => {
+            if error.kind() == NoDevice {
+                println!("No device was found!");
+            }
+            return
+        },
+    };
     port.reconfigure(&|settings|{
         settings.set_baud_rate(serial::Baud9600)
     }).unwrap();
@@ -67,8 +76,11 @@ fn main() {
         }
     });
     event_loop.run(move |_stream_id, _stream_result| {
-        let note = play_note.lock().unwrap();
-        println!("reading in event note: {}", *note);
+        // This unlocks the mutex before the loop so the other thread can use it faster.
+        let note = {
+            *play_note.lock().unwrap()
+        };
+        println!("reading in event note: {}", note);
         let stream_data = _stream_result.unwrap();
         match stream_data {
             StreamData::Output { buffer: UnknownTypeOutputBuffer::F32(mut buffer) } => {
@@ -76,22 +88,24 @@ fn main() {
                 // let mut rng = rand::thread_rng();
                 for elem in buffer.iter_mut() {
                     // *elem = rng.gen::<f32>()
-                    match *note {
-                        0 => *elem = 0.0,
-                        1 => *elem = C.next()[0] as f32,
-                        2 => *elem = Csharp.next()[0] as f32,
-                        3  => *elem = D.next()[0] as f32,
-                        4 => *elem = Dsharp.next()[0] as f32,
-                        5 => *elem = E.next()[0] as f32,
-                        6 => *elem = F.next()[0] as f32,
-                        7 => *elem = Fsharp.next()[0] as f32,
-                        8 => *elem = G.next()[0] as f32,
-                        9 => *elem = Gsharp.next()[0] as f32,
-                        10 => *elem = A.next()[0] as f32,
-                        11 => *elem = Asharp.next()[0] as f32,
-                        12 => *elem = B.next()[0] as f32,
-                        _ => *elem = 0.0
+                    let next_value;
+                    match note {
+                        0  => next_value = 0.0,
+                        1  => next_value = C.next()[0],
+                        2  => next_value = Csharp.next()[0],
+                        3  => next_value = D.next()[0],
+                        4  => next_value = Dsharp.next()[0],
+                        5  => next_value = E.next()[0],
+                        6  => next_value = F.next()[0],
+                        7  => next_value = Fsharp.next()[0],
+                        8  => next_value = G.next()[0],
+                        9  => next_value = Gsharp.next()[0],
+                        10 => next_value = A.next()[0],
+                        11 => next_value = Asharp.next()[0],
+                        12 => next_value = B.next()[0],
+                        _  => next_value = 0.0
                     }
+                    *elem = (next_value/5.0) as f32;
                 }
             },
             _ => ()
