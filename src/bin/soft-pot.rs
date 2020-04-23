@@ -112,32 +112,31 @@ fn main() {
                 // let mut rng = rand::thread_rng();
                 for elem in buffer.iter_mut() {
                     // *elem = rng.gen::<f32>()
-                    let next_value;
-                    match note {
+                    let next_value = match note {
                         #[rustfmt::skip]
-                        1  => next_value = C.next()[0],
+                        1  => C.next()[0],
                         #[rustfmt::skip]
-                        2  => next_value = Csharp.next()[0],
+                        2  => Csharp.next()[0],
                         #[rustfmt::skip]
-                        3  => next_value = D.next()[0],
+                        3  => D.next()[0],
                         #[rustfmt::skip]
-                        4  => next_value = Dsharp.next()[0],
+                        4  => Dsharp.next()[0],
                         #[rustfmt::skip]
-                        5  => next_value = E.next()[0],
+                        5  => E.next()[0],
                         #[rustfmt::skip]
-                        6  => next_value = F.next()[0],
+                        6  => F.next()[0],
                         #[rustfmt::skip]
-                        7  => next_value = Fsharp.next()[0],
+                        7  => Fsharp.next()[0],
                         #[rustfmt::skip]
-                        8  => next_value = G.next()[0],
+                        8  => G.next()[0],
                         #[rustfmt::skip]
-                        9  => next_value = Gsharp.next()[0],
-                        10 => next_value = A.next()[0],
-                        11 => next_value = Asharp.next()[0],
-                        12 => next_value = B.next()[0],
+                        9  => Gsharp.next()[0],
+                        10 => A.next()[0],
+                        11 => Asharp.next()[0],
+                        12 => B.next()[0],
                         #[rustfmt::skip]
-                        _  => next_value = 0.0,
-                    }
+                        _  => 0.0,
+                    };
                     *elem = (next_value / 5.0) as f32;
                 }
             }
