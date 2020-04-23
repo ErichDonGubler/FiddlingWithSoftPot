@@ -85,8 +85,7 @@ fn main() {
             match resultythingy {
                 Ok(()) => {
                     // println!("                                      Everything is ok!");
-                    // The arduino sends ascii, and 0 in ascii is 48.
-                    let read_note = (i32::from(slice[0] % 48) * 10) + i32::from(slice[1] % 48);
+                    let read_note = (i32::from(slice[0] % b'0') * 10) + i32::from(slice[1] % b'0');
                     let mut note = get_note.lock().unwrap();
                     if read_note != *note {
                         *note = read_note
