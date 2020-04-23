@@ -115,8 +115,6 @@ fn main() {
                     let next_value;
                     match note {
                         #[rustfmt::skip]
-                        0  => next_value = 0.0,
-                        #[rustfmt::skip]
                         1  => next_value = C.next()[0],
                         #[rustfmt::skip]
                         2  => next_value = Csharp.next()[0],
