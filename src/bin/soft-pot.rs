@@ -1,4 +1,7 @@
-use sample::{signal, Signal};
+use sample::{
+    signal::{self, ConstHz, Sine},
+    Signal,
+};
 use serial::prelude::*;
 use serial::ErrorKind::NoDevice;
 
@@ -42,38 +45,21 @@ fn main() {
         .play_stream(stream_id)
         .expect("failed to play_stream");
 
-    // Define each note
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut C      = signal::rate(44_100.0).const_hz(261.626).sine();
-    #[allow(non_snake_case)]
-    let mut Csharp = signal::rate(44_100.0).const_hz(277.183).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut D      = signal::rate(44_100.0).const_hz(293.665).sine();
-    #[allow(non_snake_case)]
-    let mut Dsharp = signal::rate(44_100.0).const_hz(311.127).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut E      = signal::rate(44_100.0).const_hz(329.628).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut F      = signal::rate(44_100.0).const_hz(349.228).sine();
-    #[allow(non_snake_case)]
-    let mut Fsharp = signal::rate(44_100.0).const_hz(369.994).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut G      = signal::rate(44_100.0).const_hz(391.995).sine();
-    #[allow(non_snake_case)]
-    let mut Gsharp = signal::rate(44_100.0).const_hz(415.305).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut A      = signal::rate(44_100.0).const_hz(440.000).sine();
-    #[allow(non_snake_case)]
-    let mut Asharp = signal::rate(44_100.0).const_hz(466.164).sine();
-    #[allow(non_snake_case)]
-    #[rustfmt::skip]
-    let mut B      = signal::rate(44_100.0).const_hz(493.883).sine();
+    const NUM_NOTES_IN_CHROMATIC_SCALE: usize = 12;
+    let mut notes: [Sine<ConstHz>; NUM_NOTES_IN_CHROMATIC_SCALE] = [
+        signal::rate(44_100.0).const_hz(261.626).sine(), // C
+        signal::rate(44_100.0).const_hz(277.183).sine(), // C#
+        signal::rate(44_100.0).const_hz(293.665).sine(), // D
+        signal::rate(44_100.0).const_hz(311.127).sine(), // D#
+        signal::rate(44_100.0).const_hz(329.628).sine(), // E
+        signal::rate(44_100.0).const_hz(349.228).sine(), // F
+        signal::rate(44_100.0).const_hz(369.994).sine(), // F#
+        signal::rate(44_100.0).const_hz(391.995).sine(), // G
+        signal::rate(44_100.0).const_hz(415.305).sine(), // G#
+        signal::rate(44_100.0).const_hz(440.000).sine(), // A
+        signal::rate(44_100.0).const_hz(466.164).sine(), // A#
+        signal::rate(44_100.0).const_hz(493.883).sine(), // B
+    ];
 
     let current_note = Arc::new(Mutex::new(0));
     let get_note = Arc::clone(&current_note);
@@ -112,31 +98,12 @@ fn main() {
                 // I was fiddling with static as a test before I figured out specific notes.
                 // let mut rng = rand::thread_rng();
                 for elem in buffer.iter_mut() {
+                    const NUM_NOTES_IN_CHROMATIC_SCALE_I32: i32 =
+                        NUM_NOTES_IN_CHROMATIC_SCALE as i32;
                     // *elem = rng.gen::<f32>()
                     let next_value = match note {
-                        #[rustfmt::skip]
-                        1  => C.next()[0],
-                        #[rustfmt::skip]
-                        2  => Csharp.next()[0],
-                        #[rustfmt::skip]
-                        3  => D.next()[0],
-                        #[rustfmt::skip]
-                        4  => Dsharp.next()[0],
-                        #[rustfmt::skip]
-                        5  => E.next()[0],
-                        #[rustfmt::skip]
-                        6  => F.next()[0],
-                        #[rustfmt::skip]
-                        7  => Fsharp.next()[0],
-                        #[rustfmt::skip]
-                        8  => G.next()[0],
-                        #[rustfmt::skip]
-                        9  => Gsharp.next()[0],
-                        10 => A.next()[0],
-                        11 => Asharp.next()[0],
-                        12 => B.next()[0],
-                        #[rustfmt::skip]
-                        _  => 0.0,
+                        idx @ 1..=NUM_NOTES_IN_CHROMATIC_SCALE_I32 => notes[idx as usize].next()[0],
+                        _ => 0.0,
                     };
                     *elem = (next_value / 5.0) as f32; // XXX(erichdongubler): is rounding a concern here? Guessing not, but just wanted to check.
                 }
