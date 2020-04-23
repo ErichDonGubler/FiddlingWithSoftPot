@@ -1,5 +1,5 @@
 [package]
-name = "SoftPot"
+name = "soft-pot"
 version = "0.1.0"
 authors = ["JacobPuff <jacob@todandlorna.com>"]
 edition = "2018"
