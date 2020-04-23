@@ -93,7 +93,7 @@ fn main() {
                     }
                     // println!("                                          Note! {:?}", *note)
                 }
-                Err(resultythingy) => {
+                Err(_resultythingy) => {
                     // println!("                                      Oh no! {:?}", resultythingy);
                 }
             }
