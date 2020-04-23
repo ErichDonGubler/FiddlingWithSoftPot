@@ -99,8 +99,10 @@ fn main() {
         }
     });
     event_loop.run(move |_stream_id, _stream_result| {
-        // This unlocks the mutex before the loop so the other thread can use it faster.
-        let note = { *play_note.lock().unwrap() };
+        let note = {
+            // This unlocks the mutex before the loop so the other thread can use it faster.
+            *play_note.lock().unwrap()
+        };
         println!("reading in event note: {}", note);
         let stream_data = _stream_result.unwrap();
         match stream_data {
