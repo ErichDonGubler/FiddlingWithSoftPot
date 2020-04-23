@@ -43,23 +43,35 @@ fn main() {
         .expect("failed to play_stream");
 
     // Define each note
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut C      = signal::rate(44_100.0).const_hz(261.626).sine();
+    #[allow(non_snake_case)]
     let mut Csharp = signal::rate(44_100.0).const_hz(277.183).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut D      = signal::rate(44_100.0).const_hz(293.665).sine();
+    #[allow(non_snake_case)]
     let mut Dsharp = signal::rate(44_100.0).const_hz(311.127).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut E      = signal::rate(44_100.0).const_hz(329.628).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut F      = signal::rate(44_100.0).const_hz(349.228).sine();
+    #[allow(non_snake_case)]
     let mut Fsharp = signal::rate(44_100.0).const_hz(369.994).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut G      = signal::rate(44_100.0).const_hz(391.995).sine();
+    #[allow(non_snake_case)]
     let mut Gsharp = signal::rate(44_100.0).const_hz(415.305).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut A      = signal::rate(44_100.0).const_hz(440.000).sine();
+    #[allow(non_snake_case)]
     let mut Asharp = signal::rate(44_100.0).const_hz(466.164).sine();
+    #[allow(non_snake_case)]
     #[rustfmt::skip]
     let mut B      = signal::rate(44_100.0).const_hz(493.883).sine();
 
