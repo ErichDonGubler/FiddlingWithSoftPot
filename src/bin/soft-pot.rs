@@ -138,7 +138,7 @@ fn main() {
                         #[rustfmt::skip]
                         _  => 0.0,
                     };
-                    *elem = (next_value / 5.0) as f32;
+                    *elem = (next_value / 5.0) as f32; // XXX(erichdongubler): is rounding a concern here? Guessing not, but just wanted to check.
                 }
             }
             _ => (),
