@@ -102,10 +102,11 @@ fn main() {
                         NUM_NOTES_IN_CHROMATIC_SCALE as i32;
                     // *elem = rng.gen::<f32>()
                     let next_value = match note {
-                        idx @ 1..=NUM_NOTES_IN_CHROMATIC_SCALE_I32 => notes[idx as usize].next()[0],
+                        // notes is a slice that has the first note at idx 0.
+                        idx @ 1..=NUM_NOTES_IN_CHROMATIC_SCALE_I32 => notes[(idx-1) as usize].next()[0],
                         _ => 0.0,
                     };
-                    *elem = (next_value / 5.0) as f32; // XXX(erichdongubler): is rounding a concern here? Guessing not, but just wanted to check.
+                    *elem = (next_value / 5.0) as f32;
                 }
             }
             _ => (),
